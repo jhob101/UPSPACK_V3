@@ -3,45 +3,50 @@
 import serial
 import re
 import RPi.GPIO as GPIO
-import os,sys
+import os, sys
 import time
 
+
 class UPS2:
-    def __init__(self,port):
-        self.ser  = serial.Serial(port,9600)        
+    def __init__(self, port):
+        self.ser = serial.Serial(port, 9600)
+        print("Serial port is open: "+str(self.ser.isOpen()))
         
-    def get_data(self,nums):
-        while True:
-            self.count = self.ser.inWaiting()
-            
-            if self.count !=0:
+    def get_data(self, nums):
+        self.count = self.ser.inWaiting()
+        if self.count != 0:
+            try:
                 self.recv = self.ser.read(nums)
                 return self.recv
-    
+            except serial.SerialException as e:
+                # Handle the SerialException here (e.g., log the error or return an error value)
+                print(f"SerialException: {e}")
+                return None
+
     def decode_uart(self):
-        self.uart_string = self.get_data(100)
-#    print(uart_string)
-        self.data = self.uart_string.decode('ascii','ignore')
-#    print(data)
+        self.uart_string = self.get_data(96)
+        self.data = self.uart_string.decode('ascii', 'ignore')
+
         self.pattern = r'\$ (.*?) \$'
-        self.result = re.findall(self.pattern,self.data,re.S)
+        self.result = re.findall(self.pattern, self.data,re.S)
     
         self.tmp = self.result[0]
     
         self.pattern = r'SmartUPS (.*?),'
-        self.version = re.findall(self.pattern,self.tmp)
+        self.version = re.findall(self.pattern, self.tmp)
     
         self.pattern = r',Vin (.*?),'
-        self.vin = re.findall(self.pattern,self.tmp)
+        self.vin = re.findall(self.pattern, self.tmp)
         
         self.pattern = r'BATCAP (.*?),'
-        self.batcap = re.findall(self.pattern,self.tmp)
+        self.batcap = re.findall(self.pattern, self.tmp)
         
         self.pattern = r',Vout (.*)'
-        self.vout = re.findall(self.pattern,self.tmp)
+        self.vout = re.findall(self.pattern, self.tmp)
 
-        return self.version[0],self.vin[0],self.batcap[0],self.vout[0]
-    
+        return self.version[0], self.vin[0], self.batcap[0], self.vout[0]
+
+
 class UPS2_IO:
     def __init__(self,bcm_io=18):
         self.shutdown_check_pin = bcm_io
@@ -61,7 +66,7 @@ class UPS2_IO:
         sys.exit()
     
 
-    def cleanup():
+    def cleanup(self):
         print("clean up GPIO.")
         GPIO.cleanup() 
 

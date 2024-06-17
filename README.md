@@ -1,80 +1,75 @@
-[Jump to English manual](./README_en.md)  [firmware update manual](./update_ups_fw_en.md)
+[Update firmware tutorial](./update_ups_fw_en.md)
 
-[固件升级中文教程](./update_ups_fw.md)
+# RPi UPSPack V3 Product User Guide
 
-
-
-
-# RPi UPSPack V3 产品使用指南
-
-UPSPack v3 是在2020年9月发布的新一代树莓派UPS不间断电源扩展板的最新型号。根据以往v1和v2版本的迭代升级，v3版本是目前树莓派UPS供电最稳定的一种供电方案。
+UPSPack v3 is the latest model of the new generation of Raspberry Pie UPS uninterruptible power supply expansion boards released in September 2020. Based on iterative upgrades from previous v1 and v2 versions, v3 is the most stable power supply solution available for Raspberry Pie.
 
 ![UPS3](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/UPS3.jpg)
 
-## 目录
+## catalogues
 
-* [功能升级](#功能升级)
-* [性能参数](#性能参数)
-  * [输出电流](#输出电流)
-  * [续航时间](#续航时间)
-  * [断电不重启](#断电不重启)
-  * [开机低压检测及自动关机和自动开机](#开机低压检测及自动关机和自动开机)
-* [硬件说明](#硬件说明)
-  * [接口说明](#接口说明)
-  * [UPS供电方式](#UPS供电方式)
-  * [LED显示](#LED显示)
-  * [电池接口](#电池接口)
-  * [通讯接口](#通讯接口)
-  * [机械尺寸图](#机械尺寸图)
-* [软件驱动](#软件驱动)
-  * [安全关机](#安全关机)
-  * [UART软件](#UART软件)
-
-
-
-
-
-### 功能升级
-
-以下列出UPS v3版本和v2版本的产品差异：
-
-| 功能特点                                      | RPi UPSPack V3版本                           | RPi UPSPack V2版本                        |
-| --------------------------------------------- | -------------------------------------------- | ----------------------------------------- |
-| 输入接口                                      | TYPE-C接口（兼容最新Pi4的电源线）            | Micro-USB接口（兼容Pi3及更老型号的Pi）    |
-| 最大输出电流                                  | 5V 3A                                        | 5V 3A                                     |
-| 外部停电，Pi持续供电（不重启）                | 支持                                         | 支持                                      |
-| 硬件开停机开关                                | 有                                           | 有                                        |
-| GPIO供电接口和UART、halt signal信号接口       | 有                                           | 有                                        |
-| 锂电池电量统计                                | 支持                                         | 支持                                      |
-| 开机低压检测                                  | 支持                                         | 不支持                                    |
-| 电源适配器异常检测（停电时刻检测）            | 支持                                         | 支持                                      |
-| USB-A座输出电压值检测                         | 支持                                         | 支持                                      |
-| 电池耗尽前自动通知关机                        | 支持                                         | 支持                                      |
-| 停电后，程序自动开机                          | 支持（无需人工干预，程序开机）               | 不支持（需人工干预开机）                  |
-| 停电后，UPS自动切换成休眠模式                 | 支持                                         | 不支持                                    |
-| 固件升级                                      | 支持                                         | 不支持                                    |
-|                                               |                                              |                                           |
-| **UPS与Pi的串口（UART）通讯：**               |                                              |                                           |
-| 通讯设置                                      | 9600 bps 8N1                                 | 9600 bps 8N1                              |
-| 协议版本号                                    | V3.1（及更高版本）                           | V1.0                                      |
-| 协议向下兼容性                                | 兼容V2老版本的UPS通讯协议                    | 兼容                                      |
-|                                               |                                              |                                           |
-| **UPS与Pi的单总线通讯（System halt signal）** |                                              |                                           |
-| 通讯IO口                                      | UPS主板的STA接口连接树莓派GPIO18（BCM 18）   | UPS主板的STA接口连接树莓派GPIO18（BCM18） |
-| 通讯协议                                      | 脉冲方式                                     | 电平方式                                  |
-| 软件兼容性                                    | V3采用脉冲检测更为可靠（与V2版本软件不兼容） | 电平检测方式                              |
+* [Function upgrades](#Function-upgrades)
+* [Performance parameters](#Performance-parameters)
+  * [Output Current](#Output-Current)
+  * [Endurance time](#Endurance-time)
+  * [Power failure without restart](#Power-failure-without-restart)
+  * [Low-voltage detection of start-up and automatic shutdown and start-up](#Low-voltage-detection-of-start-up-and-automatic-shutdown-and-start-up)
+* [Hardware Description](#Hardware-Description)
+  * [Interface Description](#Interface-Description)
+  * [UPS power supply method](#UPS-power-supply-method)
+  * [LED display](#LED-display)
+  * [Battery connector](#Battery-connector)
+  * [Communication interface](#Communication-interface)
+  * [Mechanical dimensional drawings](#Mechanical-dimensional-drawings)
+* [Software Drivers](#Software-Drivers)
+  * [Safety shutdown](#Safety-shutdown)
+  * [UART software](#UART-software)
 
 
 
 
 
-### 性能参数
+### Function upgrades
 
-以下是是UPS v3输出最大电流、续航时间、断电不重启、电池耗尽前安全关机和自动开机，几个方面来阐述UPS v3的性能和注意事项。
+The following lists the product differences between UPS v3 and v2 versions.
 
-#### 输出电流
+| Features                                                     | RPi UPSPack V3                                               | RPi UPSPack V2                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Input interface                                              | TYPE-C connector (power cord compatible with the latest Pi4) | Micro-USB port (compatible with Pi3 and older Pi models)     |
+| Output max current                                           | 5V 3A                                                        | 5V 3A                                                        |
+| External power outage, Pi continuous power (no reboot)       | support                                                      | support                                                      |
+| Hardware on/off switch                                       | support                                                      | support                                                      |
+| GPIO power interface and UART and halt signal interface.     | support                                                      | support                                                      |
+| Lithium Battery Statistics                                   | support                                                      | support                                                      |
+| Start-up low voltage check                                   | support                                                      | NOT support                                                  |
+| Power adapter anomaly detection (power outage detection)     | support                                                      | support                                                      |
+| USB-A socket output voltage detection                        | support                                                      | support                                                      |
+| Automatic shutdown notification before battery exhaustion    | support                                                      | support                                                      |
+| After a power failure, the program starts automatically      | Support (no human intervention, program is on)               | NOT support（requires manual intervention to power up）      |
+| After a power failure, the UPS automatically switches to hibernation mode. | support                                                      | NOT support                                                  |
+| firmware update                                              | support                                                      | NOT support                                                  |
+|                                                              |                                                              |                                                              |
+| **The UPS communicates with the Pi's serial port (UART):**   |                                                              |                                                              |
+| Setting                                                      | 9600 bps 8N1                                                 | 9600 bps 8N1                                                 |
+| Protocol version                                             | V3.1 (and higher)                                            | V1.0                                                         |
+| Protocol backwards compatibility                             | UPS communication protocol compatible with V2 old version    | compatible                                                   |
+|                                                              |                                                              |                                                              |
+| **Single bus communication between UPS and Pi (System halt signal)** |                                                              |                                                              |
+| Communication IO port                                        | The STA port on the UPS motherboard connects to the Raspberry GPIO18 (BCM 18) | UPS motherboard's STA port connects to the Raspberry GPIO18 (BCM18) |
+| communications protocol                                      | Pulse method                                                 | Leveling method                                              |
+| Software compatibility                                       | More reliable with pulse detection in V3 (not compatible with V2 software) | Level detection method                                       |
 
-通过EBC-A10H对UPS v3进行电流极限测试。输出最大电流能足量达到：5V 3A。经过实际测试Pi4运行官方Raspbian系统时，正常的功耗是5V 1A左右，如插入摄像头和U盘等外设的情况下，功耗逐渐增大到5V 2A。所以采用UPS v3对Pi4 进行供电，是有较大的余量的。并且在输出3A的情况下。2.54排针接口也能保证5V以上的供电。用户需要注意**5V和GND必须使用硅胶杜邦线**。如采用普通杜邦线，在电流较大时，会引起较大线损，从而在Pi4上屏幕上观察到闪电的低压符号。
+
+
+
+
+### Performance parameters
+
+Here are a few aspects of UPS v3 output maximum current, endurance, power failure without restarting, safe shutdown before battery drain, and auto-on, to explain UPS v3 performance and considerations.
+
+#### Output Current
+
+Through the EBC-A10H to UPS v3 current limit test. The maximum output current can reach 5V 3A. after the actual test Pi4 running the official Raspbian system, the normal power consumption is about 5V 1A, such as inserting the camera and U disk and other peripherals, the power consumption gradually increases to 5V 2A. so using UPS v3 to power the Pi4, there is a large margin. And with an output of 3A. The 2.54-row pin interface can also guarantee more than 5V power. Users should note that **5V and GND must be used with a silicone dupont cable**. If a normal Dupont wire is used, it will cause a larger wire loss when the current is higher, thus the low voltage symbol of lightning is observed on the screen on the Pi4.
 
 ![3a](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/3a.jpg)
 
@@ -84,40 +79,40 @@ UPSPack v3 是在2020年9月发布的新一代树莓派UPS不间断电源扩展�
 
 
 
-#### 续航时间
+#### Endurance time
 
-UPS v3板载电池接口为PH 2.0封装（兼容以往的老型号UPS主板），PCB板上有印刷正极、负极的标志。产品提供了3种不同容量的电池可供客户选择。客户亦可自行接入不同容量、额定电压为3.7V的锂聚合物电池，或者是3.7V 18650/21700/21650电池组。注意：输入UPS电池接口的电压范围必须是小于等于4.2V。（所有电池组必须是并联关系，不能把电芯串联）。**不支持3.65v磷酸铁锂电池包**。UPS v3 标准成品提供3种容量、不同体积的锂电池供客户选择：
+The UPS v3 on-board battery interface is in a PH 2.0 package (compatible with previous older UPS motherboards) with printed positive and negative markings on the PCB board. There are three different battery sizes available for customers to choose from. Customers can also be connected to different capacity, rated voltage of 3.7V lithium polymer batteries, or 3.7V 18650/21700/21650 battery pack. Note: The voltage range of the input UPS battery port must be less than or equal to 4.2V. (All battery packs must be connected in parallel, no series connection of cells). **3.65v lithium iron phosphate packs are not supported**.UPS v3 Standard Finished Product offers 3 lithium batteries in different capacities and volumes for customers to choose from.	
 
-| 型号                                     | 体积（长 x 宽 x 厚） |
-| ---------------------------------------- | -------------------- |
-| 4000mAh（额定电压3.7V，电池内置保护板）  | 70mm x 41mm x 9.5mm  |
-| 6500mAh（额定电压3.7V，电池内置保护板）  | 116mm x 50mm x 8mm   |
-| 10000mAh（额定电压3.7V，电池内置保护板） | 115mm x 65mm x 9mm   |
-
-
-
-我们搭建了不同的应用组合，得到了如下的续航数据：
-
-| 电池容量 | Pi4单机 | Pi4+官方7寸屏(DSI接口) | Pi4+3.5寸(GPIO) | Pi4+5寸(HDMI) | Pi+7寸(HDMI) |
-| :------: | :-----: | :--------------------: | :-------------: | :-----------: | :----------: |
-| 4000mAh  |  5.5h   |          2.5h          |      4.0h       |     3.3h      |     2.0h     |
-| 6500mAh  |  9.0h   |          4.0h          |      6.5h       |     5.2h      |     3.2h     |
-| 10000mAh |  14.5h  |          6.0h          |      10.0h      |     8.5h      |     5.0h     |
-
-测试方式：
-
-1. 以上所有数据单位为小时(hours)。
-2. 运行的系统为：2020-05-27-raspios-buster-full-armhf ，系统不做任何设置修改。系统后台只运行一个RPi_runtime_recoder.py进行时间统计。
-3. 3种容量的电池完全充满电量，然后接入树莓派后，利用程序进行时间记录。放电截至点为UPS让树莓派自动关机，通过log文件查看实际运行的时间。
-4. 下载、并运行 UPSPACK_V3/time_count/RPi_runtime_recoder.py 进行时间记录。当树莓派关机后，接入电源适配器读取程序目录下的time_log.txt进行续航时间的查看。
+| Battery model                                               | Volume (length x width x thickness) |
+| ----------------------------------------------------------- | ----------------------------------- |
+| 4000mAh (3.7V nominal voltage, built-in battery protector)  | 70mm x 41mm x 9.5mm                 |
+| 6500mAh (3.7V nominal voltage, built-in battery protector)  | 116mm x 50mm x 8mm                  |
+| 10000mAh (3.7V nominal voltage, built-in battery protector) | 115mm x 65mm x 9mm                  |
 
 
 
+We built different combinations of applications and got the following endurance data.
+
+| battery capacity | Pi4 stand-alone | Pi4+ official 7" screen (DSI interface) | Pi4+3.5" (GPIO) | Pi4+5"(HDMI) | Pi+7"(HDMI) |
+| :--------------: | :-------------: | :-------------------------------------: | :-------------: | :----------: | :---------: |
+|     4000mAh      |      5.5h       |                  2.5h                   |      4.0h       |     3.3h     |    2.0h     |
+|     6500mAh      |      9.0h       |                  4.0h                   |      6.5h       |     5.2h     |    3.2h     |
+|     10000mAh     |      14.5h      |                  6.0h                   |      10.0h      |     8.5h     |    5.0h     |
+
+Test Method：
+
+1. All data above are in hours.
+2. The running system is: 2020-05-27-raspios-buster-full-armhf , the system does not make any setting changes. The system only runs a RPi_runtime_recoder.py in the background for time statistics.
+3. The 3 capacity batteries are fully charged and then connected to the Raspberry Pie and use the program for time logging. The discharge as of the point the UPS lets the Raspberry Pie shut down automatically, and the log file is used to see how long it actually runs.
+4. Download, and run UPSPACK_V3/time_count/RPi_runtime_recoder.py for time logging. When the Raspberry Pie is powered off, connect the power adapter to read the time_log.txt in the program directory to check the endurance time.
 
 
-#### 断电不重启
 
-断电不重启是UPS v3的基本功能。以下演示的是Pi4和7寸HDMI屏幕都由UPS v3进行供电，人工拔掉输入的TYPE-C供电线，用来模拟外部停电的情况。Pi4和HDMI屏幕都将维持稳定的工作。
+
+
+#### Power failure without restart
+
+Power failure without restarting is a basic UPS v3 feature. The following demonstration shows that both the Pi4 and 7" HDMI screens are powered by the UPS v3. Manual unplugging of the input TYPE-C power cable is used to simulate an external power outage. both Pi4 and HDMI screens will remain stable.
 
 <img src="https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/pwr_off.gif" alt="pwr_off" style="zoom:200%;" />
 
@@ -125,15 +120,16 @@ UPS v3板载电池接口为PH 2.0封装（兼容以往的老型号UPS主板）�
 
 
 
-#### 开机低压检测及自动关机和自动开机
+#### Low-voltage detection of start-up and automatic shutdown and start-up
 
-当UPS 单独靠电池供电时，电池会有耗尽的情况。所以我们设计了一系列自动化开机和关机的策略，以使得UPS能工作在无人值守的环境中。
+When the UPS is powered by battery alone, the battery can run out of power. So we have designed a series of automated power-on and power-off strategies to enable the UPS to work in an unattended environment.
 
-* 开机低压检测：当插入的电池电压小于3.48V时，UPS会判断当前电池为即将耗尽的状态。此时虽然输出开关打到ON状态，UPS也不会对外输出5V，低压状态下UPS会关闭所有输出，并且自行进入休眠。（原因是：在电池耗尽状态，强制开机，在树莓派还没启动到桌面，电池保护板可能会停止输出。如没有这项保护策略，树莓派系统可能会因非法关机导致系统文件破损）。只有当插入TYPE-C充电线，UPS会自动唤醒，并且自动进入充电流程，充电到一定电量自动开启外部电源输出。
-* 自动关机： 当外部电源适配器停电，UPS自动采用电池作为后备电源对树莓派进行供电。当电池即将耗尽之前，UPS主板会通过System halt signal通知树莓派提前关机。然后UPS主板会自动切断树莓派主电源，并且UPS自动进入睡眠模式，等待外部供电恢复。
-* 自动开机：当外部供电恢复后，UPS主板会自动恢复运行，并且开始对电池进行充电。经过一段时间充电后，UPS主板会自动打开树莓派的主供电电源，从而让树莓派恢复运行状态。
+* Power on low voltage detection: When the inserted battery voltage is less than 3.48V, the UPS will determine the current battery is about to run out of state. At this time, although the output switch to ON state, the UPS will not output 5V, low-voltage state UPS will turn off all outputs and go to sleep on its own. (The reason for this is that in the battery depleted state, forced power on, the battery protection board may stop output before the Raspberry is booted to the desktop. (Without this protection policy, the Raspberry Pie system may break system files due to an illegal shutdown). Only when the TYPE-C charging cable is plugged in, the UPS will automatically wake up and enter the charging process, charging to a certain level to automatically turn on the external power output.
 
-以下采用可编程电源模拟电池低压开机，UPS主板自动进入低压休眠，5V不输出。当TYPE-C线接入后，自动恢复运行和电压输出的整个过程：
+* Auto shutdown: When the external power adapter loses power, the UPS automatically uses the battery as a backup power source to power the Raspberry Pie. Before the battery is about to run out, the UPS motherboard will notify the Raspberry Pie of an early shutdown via System halt signal. The UPS motherboard will then automatically cut off the main power to the Raspberry Pie and the UPS will automatically go into sleep mode, waiting for the external power supply to resume.
+* Auto Power On: When the external power supply is restored, the UPS motherboard will automatically resume operation and start charging the battery. After a period of time to charge, the UPS motherboard will automatically turn on the main power supply to the Raspberry Pie, thus allowing the Raspberry Pie to resume operation.
+
+The following uses programmable power analog battery low voltage power up, the UPS motherboard automatically enters low voltage hibernation, 5V is not output. When the TYPE-C line is connected, the entire process of automatic resumption of operation and voltage output.
 
 <img src="https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/low_bat.gif" alt="low_bat" style="zoom:200%;" />
 
@@ -142,136 +138,132 @@ UPS v3板载电池接口为PH 2.0封装（兼容以往的老型号UPS主板）�
 
 
 
-### 硬件说明
+### Hardware Description
 
-#### 接口说明
+#### Interface Description
 
 ![main_board](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/main_board.jpg)
 
-| 标号 | 名称                       | 描述                                                         |
-| ---- | -------------------------- | ------------------------------------------------------------ |
-| 1    | TYPE-C 电源适配器充电接口  | 外部5V电源对UPS进行供电的接口，供电需求5V 2A-3A              |
-| 2    | USB-A 座                   | 2个USB-A座对树莓派主板进行供电。                             |
-| 3    | LED 电量指示灯             | 4个LED灯（D1-D4）用于指示锂电池的当前电量                    |
-| 4    | UPS主板测试口              | 工厂用于烧录UPS程序和自动测试主板。该接口对用户无用。        |
-| 5    | 新塘MCU控制器              | 用于充放电路径管理，和树莓派主板相互通讯等功能。             |
-| 6    | 双PMU（Power Manage Unit） | 2颗电池充电放电，路径管理芯片（芯片已加密）                  |
-| 7    | PH2.0 锂电池输入接口       | 支持1S 3.7V锂电池，可兼容3.7V18650 / 21700等电池组（要求电池组额定电压为3.7V） |
-| 8    | UPS输出总开关              | ON / OFF 开关，当开关打到ON后，UPS输出5V到树莓派主板。OFF则反之。（外部停电且电池低压，程序会自动关闭电源输出） |
-| 9    | 2.54mm排针口               | 3P排针口：单线通讯和UART接口，用于连接树莓派主板的GPIO口，进行通讯。<br />2P电源口：通过树莓派GPIO电源接口进行5V供电。<br />产品默认赠送排针，玩家如需使用到以上接口，可以选择性焊接。 |
-| 10   | 电源输出LED灯              | 当输出5V稳定后，LED绿灯亮起。                                |
+| NO   | names                                | description                                                  |
+| ---- | ------------------------------------ | ------------------------------------------------------------ |
+| 1    | TYPE-C power adapter charging port   | External 5V power supply for UPS power supply interface, power supply requirements 5V 2A-3A |
+| 2    | USB-A docks                          | Two USB-A docks power the Raspberry Pie motherboard.         |
+| 3    | LED power indicator                  | 4 LEDs (D1-D4) to indicate the current charge of lithium batteries |
+| 4    | UPS motherboard test port            | Factory used for burning UPS programs and automatically testing the motherboard. This interface is not useful to users. |
+| 5    | MCU Controller                       | Used for charge/discharge path management, communicating with the Raspberry Pie motherboard and other functions. |
+| 6    | Dual Power Manage Unit               | 2 battery charge/discharge, path management chip (chip is encrypted) |
+| 7    | PH2.0 Li-ion battery input interface | Support 1S 3.7V Li-ion battery, compatible with 3.7V 18650 / 21700 etc. battery pack (3.7V nominal voltage of battery pack required) |
+| 8    | UPS output switch                    | ON / OFF switch, when the switch hits ON, the UPS outputs 5V to the Raspberry Pie motherboard.OFF is the opposite. (External power failure and low battery voltage, the program will automatically turn off the power output) |
+| 9    | 2.54mm spigot                        | 3P Pin Header Port: single wire communication and UART port for connecting to the GPIO port on the Raspberry Pie motherboard for communication.<br />2P power port: 5V power supply through the Raspberry Pie GPIO power interface.<br />The product comes with a free pin by default, customer who need to use to the above interface need soldering. |
+| 10   | Power output LEDs                    | When the 5V output is stable, the green LED lights up.       |
 
 
 
 
 
-#### UPS供电方式
+#### UPS power supply method
 
-##### 电源适配器对UPS供电
+##### Power adapter to power UPS
 
-UPS v3主板通过 TPYE-C线 对 UPS主板进行供电。对外部电源适配器的需求是5V 2A - 5V 3A。UPS内部有电源路径管理系统，会自动调节输入电流的大小。例如：当外部无负载、或者负载较轻，且UPS板载的电池也已经充满的情况下。输入电流会约等于负载的消耗电流。TYPC-C 输入的充电线，尽量采用短而粗的电源线，让线损较小，从而到达UPS的主板的充电功率是充足的。
+The UPS v3 motherboard is powered by the TPYE-C cable. The UPS has an internal power path management system that automatically adjusts the input current. For example, when there is no external load, or when the load is light and the UPS has a full battery on board. The input current will be approximately equal to the current consumed by the load. the TYPC-C input charging cable, try to use a short and thick power cord, so that the wire loss is small, so that the charging power to reach the main board of the UPS is sufficient.
 
-**提示：如果电源头标称参数为5V 3A，UPS工作在边充边放状态，电池电量还一直在减少的原因，可能是输入TYPE-C的线损较大（或电源头参数虚标），实际电源适配器到达TYPE-C接口的功率不足以同时给负载供电和同时给电池充电导致的。 解决方案：更换大品牌质量可靠的电源头和品牌充电线（较粗）。**
-
-
-
-##### UPS对树莓派主板供电
-
-UPS主板可以使用USB-A座对树莓派主板进行供电，也可以通过GPIO 5V接口对树莓派进行供电。两种供电方案，选任意一种即可。
-
-| 供电方式                      | 说明                                                         |
-| ----------------------------- | ------------------------------------------------------------ |
-| 使用USB-A对树莓派主板进行供电 | UPS插入TYPE-C电源线与Pi4进行供电。（Pi3及更老版本可以使用Micro-USB线进行连接）。优点：无需焊接，使用方便。缺点：USB座和USB线组成的接口整体内阻稍大，适合Pi4常规应用。USB线请选择尽可能**短而粗**的线，减少线损压降，防止Pi4出现闪电符号的情况。如还是出现闪电符号，可选用如下的GPIO直接供电的方案进行供电。 |
-| 通过GPIO接口对树莓派进行供电  | 在UPS上焊接5V排针，用22AWG短而粗的**硅胶杜邦线**对Pi4进行供电。用**柔软的硅胶杜邦线**可承受5A的电流，并且内阻较小。请勿使用普通铝包铜的信号杜邦线，这将会引入较大内阻，从而导致线损压降大，Pi屏幕上出现低压闪电符号。 |
-
-
-|     供电方式（以下2选1）      |             **接线实例**              |
-| :---------------------------: | :-----------------------------------: |
-| 使用USB-A对树莓派主板进行供电 | ![cable_power](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/cable_power.jpg) |
-| 通过GPIO接口对树莓派进行供电  |  ![gpio_power](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/gpio_power.jpg)  |
+**Tip: If the power supply header nominal parameters for 5V 3A, UPS work in the state of discharge while charging, the battery power has been reducing the reasons, may be the input TYPE-C line loss is larger (or the power supply header parameters dummy), the actual power adapter to reach the TYPE-C interface power is not enough to simultaneously supply power to the load and at the same time to charge the battery caused by. Solution: Replace the quality and reliability of the big brand power supply head and brand charging cable (thicker). **
 
 
 
-#### LED显示
+##### UPS Power to Raspberry Pie Motherboard
 
-UPS主板上板载6个LED灯：
+The UPS motherboard can power the Raspberry Pie using the USB-A dock, or the Raspberry Pie can be powered via the GPIO 5V port. Either one of the two power supply options is sufficient.
 
-* 绿色LED：D1、D2、D3、D4用于电池的电量显示
-* 红色LED：Charge Status 为充电状态指示灯。（以下简称CS灯）
-  * 当UPS关闭输出，用户只对UPS进行充电时：电池未充满时，CS灯闪烁。当电池完全充满时，CS灯常亮。
-  * 当UPS工作在边冲边放状态下：CS灯一直为闪烁状态。只有当负载较轻的情况下，如给Pi Zero或者类似较轻负载供电时，经过较长充电后，CS灯会显示常亮。此灯由PMU管理芯片输出控制，当电池未充满时，都表现为闪烁状态。
-  * 当UPS开关关闭，并且TYPE-C对UPS充电也关闭时：CS灯持续常亮20s后自动关闭。
-* 绿色LED：Power LED为输出电源指示灯。当UPS向树莓派主板输出5V电源时，此灯点亮。
+| Power supply method                                   | explain                                                      |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| Powering the Raspberry Pie Motherboard with USB-A     | The UPS plugs into the TYPE-C power cable to power the Pi4. (Pi3 and older versions can be connected using a Micro-USB cable). Pros: No soldering required, easy to use. Disadvantages: the USB interface is a little more resistant, suitable for Pi4 regular applications, please choose a USB cable as short and thick as possible to reduce the line loss voltage drop and prevent the Pi4 from flashing. If the lightning symbol still appears, you can use the following GPIO direct power supply solution to power the Pi4. |
+| Powering the Raspberry Pie through the GPIO Interface | Solder a 5V row pin on the UPS and power the Pi4 with 22AWG short and thick **silicone dupont wire**. Use a **flexible silicone dupont cable** that can withstand up to 5A of current and has less internal resistance. Do not use a regular aluminum-clad copper signal duPont cable, as this will introduce greater internal resistance, which will result in high line loss voltage drop and a low-voltage lightning bolt symbol on the Pi screen. |
 
-LED电量显示表：
 
-| D4   | D3   | D2   | D1   | 电池电压  |
-| ---- | ---- | ---- | ---- | --------- |
-| 灭   | 灭   | 灭   | 闪烁 | 小于3.45v |
-| 灭   | 灭   | 灭   | 常亮 | 3.55v     |
-| 灭   | 灭   | 常亮 | 常亮 | 3.72v     |
-| 灭   | 常亮 | 常亮 | 常亮 | 3.89v     |
-| 常亮 | 常亮 | 常亮 | 常亮 | 大于4v    |
-
-当D1-D4都常亮，并且CS灯也常亮，表示电池已完全充满。
+|   Type of electricity supply (choose 1 of 2 below)    |                    **Examples of wiring**                    |
+| :---------------------------------------------------: | :----------------------------------------------------------: |
+|   Powering the Raspberry Pie Motherboard with USB-A   | ![cable_power](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/cable_power.jpg) |
+| Powering the Raspberry Pie through the GPIO Interface | ![gpio_power](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/gpio_power.jpg) |
 
 
 
-#### 电池接口
+#### LED display
 
-UPS主板的电池接口：**PH2.0座**。产品出厂配套的电池组内部已集成锂电池保护板。如用户想自行接入DIY的电池包，请注意以下几个注意事项：
+6 LEDs onboard on the UPS main board.
 
-* 电池输出线的接口为PH 2.0 公头，**注意接口的正极和负极！如电池线接反，UPS将会烧毁！**
+* Green LEDs: D1, D2, D3, D4 for battery charge indication.
+* Red LED: Charge Status is the charge status indicator. (hereafter referred to as CS lamp)
+  * When the UPS is off output and the user is only charging the UPS: the CS lamp flashes when the battery is not fully charged. When the battery is fully charged, the CS lamp is always on.
+  * When the UPS is operating in a flush and discharge state: the CS lamp is always flashing. Only when the load is light, such as when powering a Pi Zero or similar light load, will the CS lamp appear to be on after a long charge. The light is controlled by the PMU management chip output and will flash when the battery is not fully charged.
+  * When the UPS switch is off and the TYPE-C is off to charge the UPS: The CS lamp stays on constantly for 20s and then turns off automatically.
+* Green LED: The Power LED is the output power indicator. This light is lit when the UPS outputs 5V power to the Raspberry Pie motherboard.
 
-* 自主电池组为1S 3.7V锂电池：额定电压3.7V，充满电压4.2V的电池组。常规兼容型号：18650、21700、21650等电池组都兼容。**不兼容磷酸铁锂电池。**
+LED power indicator.
 
-* 容量无特别要求，但考虑到Pi4续航，最佳容量最好大于4000mAh
+| D4   | D3   | D2   | D1    | Battery voltage   |
+| ---- | ---- | ---- | ----- | ----------------- |
+| off  | off  | off  | blink | less than 3.45v   |
+| off  | off  | off  | on    | 3.55v             |
+| off  | off  | on   | on    | 3.72v             |
+| off  | on   | on   | on    | 3.89v             |
+| on   | on   | on   | on    | greater than 4.0v |
 
-* 自己组装的电池组尽量带6A及以上大电流锂电池保护板：市面上常规的锂电池保护板参数为3A-4A，当外部需要大电流时，保护电流太小的保护板可能会导致输出打嗝的状况。
+When both D1-D4 are always on and the CS light is also always on, the battery is fully charged.
+
+
+
+#### Battery connector
+
+Battery interface of UPS main board:**PH2.0 holder**. The lithium battery protection plate has been integrated inside the factory-matched battery pack. If users want to access the DIY battery pack on their own, please note the following precautions.
+
+* The battery output cable has a PH 2.0 male connector, **note the positive and negative poles of the connector! If the battery cable is reversed, the UPS will burn out! **
+
+* Autonomous battery pack is 1S 3.7V lithium battery: rated voltage 3.7V, full voltage 4.2V battery pack. Conventional compatible models: 18650, 21700, 21650 and other battery packs are compatible. ** Not compatible with LiFePO4 battery. **
+
+* No special capacity requirement, but the best capacity for Pi4 is more than 4000mAh.
+
+* Self-assembled battery pack try to bring 6A and above high current lithium battery protection plate: the parameters of the conventional lithium battery protection plate on the market is 3A-4A, when the external need for high current, the protection current is too small protection plate may lead to output hiccups.
 
 ![bat_info](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/bat_info.jpg)
 
-  
-
-#### 机械尺寸图
-
-![dim](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/dim.png)
 
 
+#### Communication interface
 
-#### 通讯接口
+The UPS V3 communicates with the Raspberry Pie in two ways: via UART and STA single bus interfaces. Access richer information about what UPS is currently doing.
 
-UPS V3 与树莓派通讯，采用2种方式：UART接口和STA单总线接口。STA单总线接口简单灵活，只需要在pi上通过任意一个闲置的GPIO口（提供的Pi端python程序默认为：GPIO 18，玩家可自行更改）和UPS就能进行通讯。UART接口则可以让PI读取更为丰富的UPS目前工作信息。
+The role of the 2 interfaces is as follows.
 
-2个接口的作用如下：
-
-* UART接口：UPS和树莓派的板载串口进行通讯。树莓派可以得到的信息：通讯心跳包、外部是否停电、电池容量百分比、向外输出电压值。
-* STA单总线接口：UPS主板在电池耗尽之前发送给树莓派主板一个脉冲信息（Halt signal），让树莓派安全的进行软件关机。当树莓派安全关机后，再次切断树莓派的5V主供电电源。（USB-A座和2P排针座都受程序控制）。当外部电源恢复后，UPS主板会自动进入充电流程，当电池充电到达一定容量，会自动对树莓派恢复供电。
+* UART interface: the UPS communicates with the onboard serial port of the Raspberry Pie. Information available to the Raspberry Pie: communication heartbeat packets, whether there is an external power failure, percentage of battery capacity, outgoing voltage value.
+* STA Single Bus Interface: the UPS motherboard sends a pulse message (Halt signal) to the Raspberry Pie motherboard before the battery runs out, allowing the Raspberry Pie to safely perform a software shutdown. Once the Raspberry Pie is safely shut down, the Raspberry Pie's 5V mains power supply is cut off again. (Both the USB-A and the 2P socket are programmed to do so). When the external power is restored, the UPS motherboard will automatically enter the charging process, and when the battery charge reaches a certain capacity, it will automatically restore power to the Raspberry Pie.
 
 ![gpio](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/gpio.jpg)
 
 
 
+#### Mechanical dimensional drawings
+
+![dim](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/dim.png)
 
 
 
+### Software Drivers
 
-### 软件驱动
+##### Safety shutdown
 
-##### 安全关机
+1. Unzip the product package to `/home/pi/UPSPACK_V3` directory. Check that the full directory for **shutdown_check.py** is
 
-1. 把产品配套的资料包，解压缩到 `/home/pi/UPSPACK_V3` 目录下。检查**shutdown_check.py**的完整目录是
-
-    > **shutdown_check.py**完整目录为如下：
+    > **shutdown_check.py** The full directory is as follows.
     >
     > /home/pi/UPSPACK_V3/shutdown_check.py
 
-2. 更改`/etc/rc.local`，把自动关机的程序添加成开机自动启动
+2. Change `/etc/rc.local` to add automatic shutdown to boot up.
 
     > ```shell
     > sudo nano /etc/rc.local
     > 
-    > #在最下面的 exit 的上面一行添加如下内容
+    > #Add the following to the line above the exit at the bottom of the page
     > 
     > sudo python3 /home/pi/UPSPACK_V3/shutdown_check.py &
     > 
@@ -279,66 +271,66 @@ UPS V3 与树莓派通讯，采用2种方式：UART接口和STA单总线接口�
 
 ![rc](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/rc.png)
 
-3. 完成以上步骤，即可实现当电池耗尽前，树莓派自动安全关机的功能。并且当外部恢复电源，UPS板子会自动进行充电。当电池充电到一定电量后，UPS会自动开启树莓派的电源。
+3. By completing the above steps, you can achieve the automatic safe shutdown of the Raspberry Pie when the battery runs out before. And when power is restored externally, the UPS board will automatically charge. When the battery is charged to a certain level, the UPS will automatically power on the Raspberry Pie.
 
 
 
-##### UART软件
+##### UART software
 
-UPS和树莓派通过UART接口进行信息交互，可以得到更为丰富的信息：
+The UPS and the Raspberry Pie interact with each other via the UART interface for a much richer set of information.
 
-* UPS运行时间
-* 外部TPYE-C供电口是否供电正常？（GOOD 或者 Not Good）
-* 电池当前百分比电量
-* UPS当前输出电压值
+* UPS uptime
+* Is the external TPYE-C power supply port working properly? (GOOD or Not Good)
+* Current percentage of battery charge
+* UPS current output voltage value
 
-安装过程：
+Installation:
 
-1. 把UPS v3的UART口（TX、RX）和树莓派的UART口进行连接，[详情见:通讯接口](#通讯接口)
+1. Connect the UPS v3's UART ports (TX, RX) to the Raspberry Pie's UART port [see: Communication Interface](#Communication Interface).
 
-2. 编辑/boot/config.txt
+2. EDIT /boot/config.txt
 
    ```
    sudo nano /boot/config.txt
    ```
 
-3. 增加2行内容，并且ctrl+x保存退出
+3. Add 2 lines of content and ctrl+x to save the exit
 
    ```
-   # 针对2020-08-20-Raspberry Pi OS及更新版本
+   # For 2020-08-20 - Raspberry Pi OS and newer versions
    enable_uart=1
    dtoverlay=disable-bt
    ```
    ![uart1](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/uart1.png)
    ```
-   # 针对2020-05-27-Raspberry Pi OS 以及更老版本的系统
+   # For 2020-05-27 - Raspberry Pi OS and older
    enable_uart=1
    dtoverlay=pi3-miniuart-bt
    ```
    
-4. 再次用`ls -l /dev`，查看串口0和串口1的指向关系。主要查看 **serial0 -> ttyAMA0** 的指向关系。如下图显示即位正确。
+4. Use `ls -l /dev` again to look at the pointing relationship between serial0 and serial1. Mainly check the pointing relationship of **serial0 -> ttyAMA0**. The following figure shows that this is correct.
    
    ![uart2](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/uart2.png)
    
-5. 重启树莓派
+5. Restarting Raspberry Pie
 
    ```
    sudo reboot
    ```
 
-6. 通过minicom串口软件，验证树莓派的串口0和UPS进行正常通信。
+6. Verify that the Raspberry Pie's serial port 0 and the UPS are communicating properly through the minicom serial port software.
 
    ```
    sudo apt-get install minicom -y
    sudo minicom -D /dev/ttyAMA0 -b 9600
    ```
-   可以看到UPS发到树莓派上的协议数据包。由于Linux上'\n'只换行，不回到行首。所以minicom上看到的协议，会超出屏幕。这没有关系，我们后面可以利用python来过滤这些信息。
+   You can see the protocol packets sent by UPS to the Raspberry Pie. Since '\n' on Linux is only a line feed, it doesn't go back to the beginning of the line. So the protocols seen on the minicom will be beyond the screen. It doesn't matter, we can use python later to filter this information.
 
-   > 提示1：退出minicom按键: Ctrl+A --> z --> x 
+   > Tip 1: Exit the minicom button: Ctrl+A --> z --> x 
    >
-   > 提示2：如未看到通讯协议包，说明UART连接不正确，参考[通讯接口](#通讯接口)。或者是 **serial0 -> ttyAMA0** 指向不正确。按照以上步骤仔细检查。
+   > Tip 2: If you do not see the communication protocol packet, the UART connection is incorrect, refer to [Communication Interface](#Communication Interface). Alternatively, **serial0 -> ttyAMA0** is not pointing correctly. Follow the above steps to double check.
 
-7. 进入程序目录/home/pi/UPSPACK_V3/UPS_GUI_py，双击 `UPS_GUI_demo.py` ，跳出一个对话框直接点击确认，即可运行Python GUI 程序。即可看到UPS目前的工作状况。
+7. Go to the program directory /home/pi/UPSPACK_V3/UPS_GUI_py, double click `UPS_GUI_demo.py`, a dialog box will pop up and you can click OK to run the Python GUI program. You can see the current working status of the UPS.
 
 ![click](https://cdn.jsdelivr.net/gh/rcdrones/UPSPACK_V3/image/click.png)
 
@@ -350,12 +342,12 @@ UPS和树莓派通过UART接口进行信息交互，可以得到更为丰富的�
 
 
 <!---
-##### 基于Terminal的终端程序
+##### Terminal-based terminal program
 
-对于某些不运行图形界面的Raspberry Pi OS主机来说。这里也提供用python开发的终端程序。终端程序通过UART接口和UPS v3主板进行信息交互，所以首先确保连接好通讯线。[详情见:通讯接口](#通讯接口)
+For some Raspberry Pi OS hosts that do not run a graphical interface. A terminal program developed in python is also provided here. The terminal program interacts with the UPS v3 motherboard via the UART interface, so first make sure to connect the communication cable. [See: Communication Interface for more details](#Communication Interface)
 
-1. 检查程序的路径`/home/pi/UPSPACK_V3/console_py/ups_cmd.py`是否正确。
-2. 运行程序
+1. Check that the program's path `/home/pi/UPSPACK_V3/console_py/ups_cmd.py` is correct.
+2. running program
     ```
     sudo python3 /home/pi/UPSPACK_V3/console_py/ups_cmd.py
     ```
